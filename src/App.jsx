@@ -1,11 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import './App.css'; 
+import './App.css';
 
 const App = () => {
   const [showToast, setShowToast] = useState(false);
-  
+
   // 1. Estado para el modo oscuro (por defecto lo ponemos falso/claro)
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // === NUEVOS ESTADOS PARA LA GALERÍA ===
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentProject, setCurrentProject] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // === TUS IMÁGENES === 
+  // (Reemplaza estas URLs por las rutas de tus imágenes, ej: 'assets/img/vet-1.png')
+  const projectImages = {
+    veterinaria: [
+      'assets/img/Login.png',
+      "assets/img/oauth.png",
+      'assets/img/DetalleCitas.png',
+      "assets/img/DetallesReportes.png",
+      'assets/img/RegistroMascotas.png',
+      "assets/img/RegistroClientes.png",
+      "assets/img/RegistroCitas.png",
+      "assets/img/RegistroDeReportes.png"
+    ],
+
+    indava: [
+      "https://via.placeholder.com/900x500/fff3e0/e65100?text=INDAVA+-+Proceso+OCR",
+      "https://via.placeholder.com/900x500/fff3e0/e65100?text=INDAVA+-+Base+de+Datos"
+    ],
+    inventario: [
+      "https://via.placeholder.com/900x500/ede7f6/311b92?text=Inventario+-+Login",
+      "https://via.placeholder.com/900x500/ede7f6/311b92?text=Inventario+-+Stock"
+    ]
+  };
 
   // 2. Efecto para aplicar el tema al documento HTML cada vez que cambie el estado
   useEffect(() => {
@@ -25,13 +54,42 @@ const App = () => {
       .catch((err) => console.error('Error al copiar el correo: ', err));
   };
 
-  // Función para cambiar el tema
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
+  // === FUNCIONES DEL CARRUSEL ===
+  const openGallery = (projectKey) => {
+    setCurrentProject(projectKey);
+    setCurrentImageIndex(0);
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden'; // Bloquea el scroll del fondo
+  };
+
+  const closeGallery = () => {
+    setIsModalOpen(false);
+    setCurrentProject(null);
+    document.body.style.overflow = 'auto'; // Restaura el scroll
+  };
+
+  const nextImage = () => {
+    if (currentProject) {
+      setCurrentImageIndex((prev) => 
+        prev === projectImages[currentProject].length - 1 ? 0 : prev + 1
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (currentProject) {
+      setCurrentImageIndex((prev) => 
+        prev === 0 ? projectImages[currentProject].length - 1 : prev - 1
+      );
+    }
+  };
+
   return (
-      <div className="app-container container-fluid py-4 py-md-5">
+    <div className="app-container container-fluid py-4 py-md-5 position-relative">
       <div className="row g-2 max-width-wrapper">
-        
+
         {/* COLUMNA IZQUIERDA: Perfil y Habilidades (Fija/Sticky en desktop) */}
         <aside className="col-lg-4 col-xl-3">
           <div className="card profile-card position-sticky border-0 shadow-sm p-4 text-center text-lg-start">
@@ -47,7 +105,7 @@ const App = () => {
             </div>
 
             <p className="text-muted small mb-4 text-center text-lg-start">
-              Enfocado en el diseño y construcción de APIs REST y microservicios con Java y Spring Boot. Mi enfoque principal está en el desarrollo de soluciones escalables y eficientes, con un dominio sólido en persistencia de datos utilizando JPA / Hibernate y bases de datos SQL. 
+              Enfocado en el diseño y construcción de APIs REST y microservicios con Java y Spring Boot. Mi enfoque principal está en el desarrollo de soluciones escalables y eficientes, con un dominio sólido en persistencia de datos utilizando JPA / Hibernate y bases de datos SQL.
             </p>
             <p className="text-muted small mb-4 text-center text-lg-start">
               Trabajo con Git para el control de versiones. Adicionalmente, cuento con conocimientos en Python, lo que me permite crear herramientas complementarias de automatización y optimización de datos cuando el proyecto lo requiere.
@@ -55,12 +113,6 @@ const App = () => {
 
             {/* Redes Sociales, Contacto y Controles */}
             <div className="d-flex justify-content-center justify-content-lg-start gap-2 mb-3">
-              
-              {/* NUEVO BOTÓN DE MODO OSCURO */}
-              {/*<button className="btn btn-social" onClick={toggleTheme} title="Cambiar tema">
-                {isDarkMode ? <i className="fas fa-sun text-warning"></i> : <i className="fas fa-moon"></i>}
-              </button>*/}
-
               <a className="btn btn-social" href="https://www.linkedin.com/in/loperena-flores-ernesto-guadalupe-9aa47a305/" target="_blank" rel="noreferrer" title="LinkedIn">
                 <i className="fab fa-linkedin-in"></i>
               </a>
@@ -100,11 +152,11 @@ const App = () => {
 
         {/* COLUMNA DERECHA: Contenido Principal (Scroll dinámico) */}
         <main className="col-lg-8 col-xl-9">
-          
+
           {/* SECCIÓN: Experiencia */}
           <section className="card content-card border-0 shadow-sm p-4 mb-4">
             <h3 className="section-title mb-4"><i className="fas fa-briefcase me-2 text-primary"></i> Experiencia Profesional</h3>
-            
+
             <div className="timeline">
               {/* Item 1 */}
               <div className="timeline-item mb-4">
@@ -116,11 +168,25 @@ const App = () => {
                   </div>
                   <span className="badge bg-soft-success text-success align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">2026</span>
                 </div>
+
                 <p className="text-secondary small mb-2">
-                  Aplicación web robusta diseñada para la automatización de operaciones en clínicas veterinarias. El sistema centraliza la gestión de expedientes médicos, control de mascotas y propietarios, permitiendo un flujo de trabajo digital eficiente y seguro.
+                  Diseño y desarrollo de una aplicación web para la gestión integral de una clínica veterinaria, enfocada en la administración de expedientes de mascotas, control de citas y flujos de usuarios. 
                 </p>
-                <div className="stack-used text-muted small">
-                  <strong>Stack:</strong> Java, Spring Boot, Spring Security, JPA / Hibernate, REST APIs, MySQL.
+                <p className="text-secondary small mb-2">
+                  El sistema asegura la protección de los datos mediante autenticación basada en roles y filtros sin estado (stateless). 
+                </p>
+                <p className="text-secondary small mb-2">
+                  La plataforma está construida bajo una arquitectura de microservicios, integrando el sistema principal de clínica con un módulo de tienda independiente; cada uno operando con bases de datos segregadas y comunicándose a través de la orquestación y consumo de APIs REST.
+                </p>
+
+                <div className="stack-used text-muted small mb-3">
+                  <strong>Stack:</strong> Java, JPA / Hibernate, REST APIs, PostgreSQL, Spring Boot, Spring Security, JWT (Stateless Authentication), Google OAuth2, React.
+                </div>
+
+                <div className="mt-2">
+                  <button onClick={() => openGallery('veterinaria')} className="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 shadow-sm transition-all hover-lift">
+                    <i className="fas fa-images me-2"></i> Ver capturas del proyecto
+                  </button>
                 </div>
               </div>
 
@@ -137,9 +203,21 @@ const App = () => {
                 <p className="text-secondary small mb-2">
                   Desarrollo de herramientas automatizadas de backend y optimización de bases de datos orientadas a la extracción, limpieza y procesamiento masivo de información gubernamental y corporativa.
                 </p>
-                <div className="stack-used text-muted small">
+                <p className="text-secondary small mb-2">
+                  Desarrollo de un sistema OCR con Python y Tesseract para extraer datos de salarios e incrementos de contratos legales para la plataforma Ohio Insightboard.                
+                </p>
+                <p className="text-secondary small mb-2">
+                  Optimicé y redacté consultas SQL complejas para la inserción y el análisis de datos en una plataforma Insightboard, mejorando significativamente la eficiencia del procesamiento de la información.
+                </p>
+                <div className="stack-used text-muted small mb-3">
                   <strong>Stack:</strong> Python (Bibliotecas de OCR y Web Scraping), Java, SQL, Optimización de Consultas.
                 </div>
+                {/* 
+                <div className="mt-2">
+                  <button onClick={() => openGallery('indava')} className="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 shadow-sm transition-all hover-lift">
+                    <i className="fas fa-images me-2"></i> Ver capturas del proyecto
+                  </button>
+                </div>*/}
               </div>
 
               {/* Item 3 */}
@@ -155,9 +233,16 @@ const App = () => {
                 <p className="text-secondary small mb-2">
                   Software de escritorio enfocado en la administración, trazabilidad y control de inventario de vehículos para agencias automotrices, automatizando los flujos de almacén tradicionales.
                 </p>
-                <div className="stack-used text-muted small">
+                <div className="stack-used text-muted small mb-3">
                   <strong>Stack:</strong> Java SE, Apache Maven, JPA (Java Persistence API), MySQL.
                 </div>
+                {/*
+                <div className="mt-2">
+                  <button onClick={() => openGallery('inventario')} className="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 shadow-sm transition-all hover-lift">
+                    <i className="fas fa-images me-2"></i> Ver capturas del proyecto
+                  </button>
+                </div>
+                */}
               </div>
             </div>
           </section>
@@ -185,7 +270,7 @@ const App = () => {
           <div className="row g-4">
             <div className="col-md-6">
               <section className="card content-card border-0 shadow-sm p-4 h-100">
-                <h3 className="section-title mb-3"><i className=" me-2 text-primary"></i>En mis tiempos libres</h3>
+                <h3 className="section-title mb-3"><i className="fas fa-heart me-2 text-primary"></i>En mis tiempos libres</h3>
                 <p className="text-secondary small">
                   Disfruto mucho del aire libre haciendo senderismo y viajando para conocer comida diferente. En casa, me sumerjo en mundos de Minecraft, lecturas de thrillers o practicando música. ¡También soy un apasionado speedcuber!
                 </p>
@@ -217,6 +302,74 @@ const App = () => {
       <div className={`custom-toast shadow ${showToast ? 'show' : ''}`}>
         <i className="fas fa-check-circle me-2"></i> ¡Correo copiado al portapapeles!
       </div>
+
+      {/* === MODAL DEL CARRUSEL === */}
+      {isModalOpen && currentProject && (
+        <div 
+          className="modal-overlay d-flex justify-content-center align-items-center"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            zIndex: 9999,
+            backdropFilter: 'blur(5px)'
+          }}
+          onClick={closeGallery} // Cierra si hacen clic afuera de la imagen
+        >
+          {/* Contenedor del Carrusel */}
+          <div 
+            className="position-relative d-flex flex-column align-items-center"
+            style={{ maxWidth: '90%', maxHeight: '90%' }}
+            onClick={(e) => e.stopPropagation()} // Evita que se cierre al hacer clic en la imagen
+          >
+            {/* Botón Cerrar (Arriba a la derecha) */}
+            <button 
+              onClick={closeGallery}
+              className="btn btn-link text-white position-absolute"
+              style={{ top: '-40px', right: '-20px', fontSize: '24px', textDecoration: 'none' }}
+              title="Cerrar"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+
+            {/* Imagen Actual */}
+            <img 
+              src={projectImages[currentProject][currentImageIndex]} 
+              alt={`Captura ${currentImageIndex + 1} del proyecto ${currentProject}`} 
+              className="img-fluid rounded shadow-lg"
+              style={{ maxHeight: '80vh', objectFit: 'contain' }}
+            />
+
+            {/* Controles de navegación (Solo si hay más de 1 imagen) */}
+            {projectImages[currentProject].length > 1 && (
+              <>
+                <button 
+                  onClick={prevImage}
+                  className="btn btn-dark position-absolute start-0 top-50 translate-middle-y ms-2 ms-md-n4 shadow"
+                  style={{ borderRadius: '50%', width: '45px', height: '45px', opacity: 0.8 }}
+                >
+                  <i className="fas fa-chevron-left"></i>
+                </button>
+                <button 
+                  onClick={nextImage}
+                  className="btn btn-dark position-absolute end-0 top-50 translate-middle-y me-2 me-md-n4 shadow"
+                  style={{ borderRadius: '50%', width: '45px', height: '45px', opacity: 0.8 }}
+                >
+                  <i className="fas fa-chevron-right"></i>
+                </button>
+              </>
+            )}
+
+            {/* Indicador de número de imagen */}
+            <div className="text-white mt-3 fw-bold tracking-wider small">
+              {currentImageIndex + 1} / {projectImages[currentProject].length}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
