@@ -18,9 +18,10 @@ const App = () => {
     veterinaria: [
       'assets/img/Login.png',
       "assets/img/oauth.png",
+      "assets/img/Dashboard.png",
       'assets/img/DetalleMascotas.png',
       "assets/img/DetalleDuenos.png",
-      "assets/img/DetalleVeterinarios.png",
+      "assets/img/DetalleVeterinarios2.png",
       "assets/img/DetallesReportes.png",
       'assets/img/DetalleCitas.png',
       'assets/img/RegistroMascotas.png',
