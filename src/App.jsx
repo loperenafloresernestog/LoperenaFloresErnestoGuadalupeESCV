@@ -232,7 +232,7 @@ const App = () => {
                 <div className="timeline-dot"></div>
                 <div className="d-flex flex-column flex-md-row justify-content-between mb-2">
                   <div>
-                    <h4 className="h5 fw-bold mb-0">Arquitecto y Desarrollador Backend</h4>
+                    <h4 className="h5 fw-bold mb-0">Desarrollador Backend</h4>
                     <span className="text-muted small fw-medium">Proyecto Independiente — Plataforma de Gestión Clínica Veterinaria & E-commerce</span>
                   </div>
                   <span className="badge bg-soft-success text-success align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">Nov 2025 – Actualidad</span>
