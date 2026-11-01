@@ -1,53 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './App.css';
+
+const BASE_URL = import.meta.env.BASE_URL;
+
+// Rutas e imágenes de proyectos (fuera del componente para optimizar renders y memoria)
+const projectImages = {
+  veterinaria: [
+    `${BASE_URL}assets/img/Login.png`,
+    `${BASE_URL}assets/img/oauth.png`,
+    `${BASE_URL}assets/img/Dashboard.png`,
+    `${BASE_URL}assets/img/DetalleMascotas.png`,
+    `${BASE_URL}assets/img/DetalleDuenos.png`,
+    `${BASE_URL}assets/img/DetalleVeterinarios2.png`,
+    `${BASE_URL}assets/img/DetallesReportes.png`,
+    `${BASE_URL}assets/img/DetalleCitas.png`,
+    `${BASE_URL}assets/img/RegistroMascotas.png`,
+    `${BASE_URL}assets/img/RegistroClientes.png`,
+    `${BASE_URL}assets/img/RegistroCitas.png`,
+    `${BASE_URL}assets/img/RegistroDeReportes.png`
+  ],
+  indava: [
+    "https://via.placeholder.com/900x500/fff3e0/e65100?text=INDAVA+-+Proceso+OCR",
+    "https://via.placeholder.com/900x500/fff3e0/e65100?text=INDAVA+-+Base+de+Datos"
+  ],
+  inventario: [
+    "https://via.placeholder.com/900x500/ede7f6/311b92?text=Inventario+-+Login",
+    "https://via.placeholder.com/900x500/ede7f6/311b92?text=Inventario+-+Stock"
+  ]
+};
+
+const cvPdfUrl = `${BASE_URL}assets/CVESHVLoperenaFloresErnestoGuadalupe.pdf`;
 
 const App = () => {
   const [showToast, setShowToast] = useState(false);
 
-  // 1. Estado para el modo oscuro (por defecto lo ponemos falso/claro)
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // 1. Estado para el modo oscuro con detección de preferencia del sistema y persistencia en localStorage
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      return savedTheme === 'dark';
+    }
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
-  // === NUEVOS ESTADOS PARA LA GALERÍA ===
+  // === ESTADOS PARA LA GALERÍA / CARRUSEL ===
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProject, setCurrentProject] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // === TUS IMÁGENES === 
-  // (Reemplaza estas URLs por las rutas de tus imágenes, ej: 'assets/img/vet-1.png')
-  const projectImages = {
-    veterinaria: [
-      'assets/img/Login.png',
-      "assets/img/oauth.png",
-      "assets/img/Dashboard.png",
-      'assets/img/DetalleMascotas.png',
-      "assets/img/DetalleDuenos.png",
-      "assets/img/DetalleVeterinarios2.png",
-      "assets/img/DetallesReportes.png",
-      'assets/img/DetalleCitas.png',
-      'assets/img/RegistroMascotas.png',
-      "assets/img/RegistroClientes.png",
-      "assets/img/RegistroCitas.png",
-      "assets/img/RegistroDeReportes.png"
-    ],
-
-    indava: [
-      "https://via.placeholder.com/900x500/fff3e0/e65100?text=INDAVA+-+Proceso+OCR",
-      "https://via.placeholder.com/900x500/fff3e0/e65100?text=INDAVA+-+Base+de+Datos"
-    ],
-    inventario: [
-      "https://via.placeholder.com/900x500/ede7f6/311b92?text=Inventario+-+Login",
-      "https://via.placeholder.com/900x500/ede7f6/311b92?text=Inventario+-+Stock"
-    ]
-  };
-
   // 2. Efecto para aplicar el tema al documento HTML cada vez que cambie el estado
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-    }
+    const theme = isDarkMode ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
   }, [isDarkMode]);
+
+  const toggleTheme = () => setIsDarkMode((prev) => !prev);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText('ernesto.loperena.f@gmail.com')
@@ -58,72 +66,129 @@ const App = () => {
       .catch((err) => console.error('Error al copiar el correo: ', err));
   };
 
-  const toggleTheme = () => setIsDarkMode(!isDarkMode);
-
   // === FUNCIONES DEL CARRUSEL ===
   const openGallery = (projectKey) => {
     setCurrentProject(projectKey);
     setCurrentImageIndex(0);
     setIsModalOpen(true);
-    document.body.style.overflow = 'hidden'; // Bloquea el scroll del fondo
+    document.body.style.overflow = 'hidden';
   };
 
-  const closeGallery = () => {
+  const closeGallery = useCallback(() => {
     setIsModalOpen(false);
     setCurrentProject(null);
-    document.body.style.overflow = 'auto'; // Restaura el scroll
-  };
+    document.body.style.overflow = 'auto';
+  }, []);
 
-  const nextImage = () => {
-    if (currentProject) {
+  const nextImage = useCallback(() => {
+    if (currentProject && projectImages[currentProject]) {
       setCurrentImageIndex((prev) => 
         prev === projectImages[currentProject].length - 1 ? 0 : prev + 1
       );
     }
-  };
+  }, [currentProject]);
 
-  const prevImage = () => {
-    if (currentProject) {
+  const prevImage = useCallback(() => {
+    if (currentProject && projectImages[currentProject]) {
       setCurrentImageIndex((prev) => 
         prev === 0 ? projectImages[currentProject].length - 1 : prev - 1
       );
     }
-  };
+  }, [currentProject]);
+
+  // Manejo de teclado para el carrusel (Escape, Flechas)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!isModalOpen) return;
+      if (e.key === 'Escape') closeGallery();
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isModalOpen, closeGallery, nextImage, prevImage]);
 
   return (
     <div className="app-container container-fluid py-4 py-md-5 position-relative">
-      <div className="row g-2 max-width-wrapper">
+      {/* Botón flotante para Modo Oscuro */}
+      <button 
+        className="theme-toggle-btn shadow-sm"
+        onClick={toggleTheme}
+        aria-label={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+        title={isDarkMode ? 'Activar modo claro' : 'Activar modo oscuro'}
+      >
+        <i className={isDarkMode ? 'fas fa-sun text-warning' : 'fas fa-moon text-primary'}></i>
+        <span className="d-none d-sm-inline ms-1">{isDarkMode ? 'Modo Claro' : 'Modo Oscuro'}</span>
+      </button>
 
-        {/* COLUMNA IZQUIERDA: Perfil y Habilidades (Fija/Sticky en desktop) */}
+      <div className="row g-4 max-width-wrapper">
+
+        {/* COLUMNA IZQUIERDA: Perfil y Habilidades (Sticky en desktop) */}
         <aside className="col-lg-4 col-xl-3">
           <div className="card profile-card position-sticky border-0 shadow-sm p-4 text-center text-lg-start">
             <div className="d-flex flex-column align-items-center align-items-lg-start">
               <div className="profile-img-container mb-3">
-                <img className="img-fluid rounded-circle" src="assets/img/profile.jpg" alt="Ernesto Loperena" />
+                <img 
+                  className="img-fluid rounded-circle" 
+                  src={`${BASE_URL}assets/img/profile.jpg`} 
+                  alt="Ernesto Guadalupe Loperena Flores" 
+                />
               </div>
               <h1 className="h3 fw-bold mb-1 title-name">Ernesto Guadalupe</h1>
               <h2 className="h4 fw-bold text-gradient mb-3">Loperena Flores</h2>
-              <div className="badge bg-soft-primary text-primary mb-4 px-3 py-2 rounded-pill fw-semibold">
+              <div className="badge bg-soft-primary text-primary mb-3 px-3 py-2 rounded-pill fw-semibold">
                 Desarrollador Backend
               </div>
             </div>
 
-            <p className="text-muted small mb-4 text-center text-lg-start">
+            {/* BOTÓN DESCARGAR CV */}
+            <div className="d-grid gap-2 mb-4">
+              <a 
+                href={cvPdfUrl}
+                download="CV_Ernesto_Guadalupe_Loperena_Flores.pdf"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn btn-download-cv"
+                title="Descargar Currículum Vitae en PDF"
+              >
+                <i className="fas fa-file-arrow-down me-2"></i>
+                <span>Descargar CV</span>
+              </a>
+            </div>
+
+            <p className="text-secondary small mb-3 text-center text-lg-start">
               Enfocado en el diseño y construcción de APIs REST y microservicios con Java y Spring Boot. Mi enfoque principal está en el desarrollo de soluciones escalables y eficientes, con un dominio sólido en persistencia de datos utilizando JPA / Hibernate y bases de datos SQL.
             </p>
-            <p className="text-muted small mb-4 text-center text-lg-start">
+            <p className="text-secondary small mb-4 text-center text-lg-start">
               Trabajo con Git para el control de versiones. Adicionalmente, cuento con conocimientos en Python, lo que me permite crear herramientas complementarias de automatización y optimización de datos cuando el proyecto lo requiere.
             </p>
 
-            {/* Redes Sociales, Contacto y Controles */}
+            {/* Redes Sociales y Contacto */}
             <div className="d-flex justify-content-center justify-content-lg-start gap-2 mb-3">
-              <a className="btn btn-social" href="https://www.linkedin.com/in/loperena-flores-ernesto-guadalupe-9aa47a305/" target="_blank" rel="noreferrer" title="LinkedIn">
+              <a 
+                className="btn btn-social" 
+                href="https://www.linkedin.com/in/loperena-flores-ernesto-guadalupe-9aa47a305/" 
+                target="_blank" 
+                rel="noreferrer" 
+                title="LinkedIn"
+              >
                 <i className="fab fa-linkedin-in"></i>
               </a>
-              <a className="btn btn-social" href="https://github.com/loperenafloresernestog" target="_blank" rel="noreferrer" title="GitHub">
+              <a 
+                className="btn btn-social" 
+                href="https://github.com/loperenafloresernestog" 
+                target="_blank" 
+                rel="noreferrer" 
+                title="GitHub"
+              >
                 <i className="fab fa-github"></i>
               </a>
-              <button className="btn btn-social" onClick={handleCopyEmail} title="Copiar correo">
+              <button 
+                className="btn btn-social" 
+                onClick={handleCopyEmail} 
+                title="Copiar correo (ernesto.loperena.f@gmail.com)"
+              >
                 <i className="fa-regular fa-envelope"></i>
               </button>
             </div>
@@ -154,7 +219,7 @@ const App = () => {
           </div>
         </aside>
 
-        {/* COLUMNA DERECHA: Contenido Principal (Scroll dinámico) */}
+        {/* COLUMNA DERECHA: Contenido Principal */}
         <main className="col-lg-8 col-xl-9">
 
           {/* SECCIÓN: Experiencia */}
@@ -183,7 +248,7 @@ const App = () => {
                   La plataforma está construida bajo una arquitectura de microservicios, integrando el sistema principal de clínica con un módulo de tienda independiente; cada uno operando con bases de datos segregadas y comunicándose a través de la orquestación y consumo de APIs REST.
                 </p>
 
-                <div className="stack-used text-muted small mb-3">
+                <div className="stack-used text-secondary small mb-3">
                   <strong>Stack:</strong> Java, JPA / Hibernate, REST APIs, PostgreSQL, Spring Boot, Spring Security, JWT (Stateless Authentication), Google OAuth2, React.
                 </div>
 
@@ -213,15 +278,9 @@ const App = () => {
                 <p className="text-secondary small mb-2">
                   Optimicé y redacté consultas SQL complejas para la inserción y el análisis de datos en una plataforma Insightboard, mejorando significativamente la eficiencia del procesamiento de la información.
                 </p>
-                <div className="stack-used text-muted small mb-3">
+                <div className="stack-used text-secondary small mb-3">
                   <strong>Stack:</strong> Python (Bibliotecas de OCR y Web Scraping), Java, SQL, Optimización de Consultas.
                 </div>
-                {/* 
-                <div className="mt-2">
-                  <button onClick={() => openGallery('indava')} className="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 shadow-sm transition-all hover-lift">
-                    <i className="fas fa-images me-2"></i> Ver capturas del proyecto
-                  </button>
-                </div>*/}
               </div>
 
               {/* Item 3 */}
@@ -237,16 +296,9 @@ const App = () => {
                 <p className="text-secondary small mb-2">
                   Software de escritorio enfocado en la administración, trazabilidad y control de inventario de vehículos para agencias automotrices, automatizando los flujos de almacén tradicionales.
                 </p>
-                <div className="stack-used text-muted small mb-3">
+                <div className="stack-used text-secondary small mb-3">
                   <strong>Stack:</strong> Java SE, Apache Maven, JPA (Java Persistence API), MySQL.
                 </div>
-                {/*
-                <div className="mt-2">
-                  <button onClick={() => openGallery('inventario')} className="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 shadow-sm transition-all hover-lift">
-                    <i className="fas fa-images me-2"></i> Ver capturas del proyecto
-                  </button>
-                </div>
-                */}
               </div>
             </div>
           </section>
@@ -255,18 +307,18 @@ const App = () => {
           <section className="card content-card border-0 shadow-sm p-4 mb-4">
             <h3 className="section-title mb-4"><i className="fas fa-graduation-cap me-2 text-primary"></i> Educación</h3>
             <div className="education-block mb-3 pb-3 border-bottom-dashed">
-              <div className="d-flex justify-content-between mb-1">
+              <div className="d-flex justify-content-between flex-wrap gap-2 mb-1">
                 <h4 className="h6 fw-bold mb-0">Unidad Profesional Interdisciplinaria de Ingeniería y Ciencias Sociales y Administrativas (UPIICSA IPN)</h4>
-                <span className="text-muted small ms-20 shrink-0">2020 - 2025</span>
+                <span className="badge bg-soft-secondary text-secondary fw-normal">2020 - 2025</span>
               </div>
-              <p className="text-primary small mb-0">Ciencias de la Informática</p>
+              <p className="text-primary small mb-0 fw-medium">Ciencias de la Informática</p>
             </div>
             <div className="education-block">
-              <div className="d-flex justify-content-between mb-1">
+              <div className="d-flex justify-content-between flex-wrap gap-2 mb-1">
                 <h4 className="h6 fw-bold mb-0">Tecnológico de Estudios Superiores de Ixtapaluca (TESI)</h4>
-                <span className="text-muted small ms-2 shrink-0">2017 - 2020</span>
+                <span className="badge bg-soft-secondary text-secondary fw-normal">2017 - 2020</span>
               </div>
-              <p className="text-primary small mb-0">Ingeniería en Sistemas Computacionales</p>
+              <p className="text-primary small mb-0 fw-medium">Ingeniería en Sistemas Computacionales</p>
             </div>
           </section>
 
@@ -321,20 +373,20 @@ const App = () => {
             zIndex: 9999,
             backdropFilter: 'blur(5px)'
           }}
-          onClick={closeGallery} // Cierra si hacen clic afuera de la imagen
+          onClick={closeGallery}
         >
           {/* Contenedor del Carrusel */}
           <div 
             className="position-relative d-flex flex-column align-items-center"
             style={{ maxWidth: '90%', maxHeight: '90%' }}
-            onClick={(e) => e.stopPropagation()} // Evita que se cierre al hacer clic en la imagen
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Botón Cerrar (Arriba a la derecha) */}
+            {/* Botón Cerrar */}
             <button 
               onClick={closeGallery}
               className="btn btn-link text-white position-absolute"
               style={{ top: '-40px', right: '-20px', fontSize: '24px', textDecoration: 'none' }}
-              title="Cerrar"
+              title="Cerrar (Esc)"
             >
               <i className="fas fa-times"></i>
             </button>
@@ -347,20 +399,22 @@ const App = () => {
               style={{ maxHeight: '80vh', objectFit: 'contain' }}
             />
 
-            {/* Controles de navegación (Solo si hay más de 1 imagen) */}
+            {/* Controles de navegación */}
             {projectImages[currentProject].length > 1 && (
               <>
                 <button 
                   onClick={prevImage}
                   className="btn btn-dark position-absolute start-0 top-50 translate-middle-y ms-2 ms-md-n4 shadow"
-                  style={{ borderRadius: '50%', width: '45px', height: '45px', opacity: 0.8 }}
+                  style={{ borderRadius: '50%', width: '45px', height: '45px', opacity: 0.85 }}
+                  title="Anterior (←)"
                 >
                   <i className="fas fa-chevron-left"></i>
                 </button>
                 <button 
                   onClick={nextImage}
                   className="btn btn-dark position-absolute end-0 top-50 translate-middle-y me-2 me-md-n4 shadow"
-                  style={{ borderRadius: '50%', width: '45px', height: '45px', opacity: 0.8 }}
+                  style={{ borderRadius: '50%', width: '45px', height: '45px', opacity: 0.85 }}
+                  title="Siguiente (→)"
                 >
                   <i className="fas fa-chevron-right"></i>
                 </button>

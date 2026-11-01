@@ -1,12 +1,34 @@
 :root {
   --bg-app: #f4f6f9;
+  --bg-card: #ffffff;
   --text-main: #1e293b;
+  --text-title: #0f172a;
   --text-muted: #64748b;
+  --text-secondary: #475569;
   --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
   --primary-soft: #eef2ff;
   --success-soft: #ecfdf5;
   --success-color: #10b981;
   --border-color: #e2e8f0;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* LA MAGIA DEL MODO OSCURO */
+[data-theme='dark'] {
+  --bg-app: #090d16;
+  --bg-card: #131b2e;
+  --text-main: #f1f5f9;
+  --text-title: #ffffff;
+  --text-muted: #94a3b8;
+  --text-secondary: #cbd5e1;
+  --primary-color: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-soft: rgba(99, 102, 241, 0.18);
+  --success-soft: rgba(16, 185, 129, 0.16);
+  --success-color: #34d399;
+  --border-color: #243049;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -14,59 +36,127 @@ body {
   color: var(--text-main);
   font-family: 'Muli', sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .max-width-wrapper {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
 }
 
 /* Tarjetas */
 .profile-card, .content-card {
   border-radius: 16px !important;
-  background-color: #ffffff;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--card-shadow) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-card {
-  top: 2rem;
+  top: 1.5rem;
+}
+
+/* Botón flotante para cambiar modo de color */
+.theme-toggle-btn {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  border-radius: 50px;
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.theme-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  color: var(--primary-color);
+}
+
+/* Botón Descargar CV */
+.btn-download-cv {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: #ffffff !important;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.btn-download-cv:hover {
+  background: linear-gradient(135deg, #4338ca, #3730a3);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.45);
 }
 
 /* Imagen de Perfil moderna */
 .profile-img-container img {
-  width: 180px;
-  height: 180px;
+  width: 170px;
+  height: 170px;
   object-fit: cover;
   border: 4px solid var(--primary-soft);
+  transition: border-color 0.3s ease;
 }
 
 .title-name {
-  color: #0f172a;
+  color: var(--text-title);
+  transition: color 0.3s ease;
 }
 
 .text-gradient {
-  background: linear-gradient(to right, #4f46e5, #06b6d4);
+  background: linear-gradient(to right, #6366f1, #06b6d4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+/* Textos */
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
 /* Botones sociales minimalistas */
 .btn-social {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   background-color: var(--bg-app);
   color: var(--text-muted);
   transition: all 0.2s ease;
-  border: none;
+  border: 1px solid var(--border-color);
 }
 
 .btn-social:hover {
   background-color: var(--primary-color);
   color: #ffffff;
   transform: translateY(-2px);
+  border-color: var(--primary-color);
 }
 
 /* Tags de tecnologías tipo Badge de Dashboard */
@@ -75,20 +165,28 @@ body {
   align-items: center;
   gap: 6px;
   background-color: var(--bg-app);
+  color: var(--text-main);
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 500;
   border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.tech-tag:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
 }
 
 .tech-tag-sm {
-  background-color: #ffffff;
+  background-color: var(--bg-app);
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
 }
 
 /* Colores de iconos */
@@ -102,10 +200,11 @@ body {
 .section-title {
   font-family: 'Saira Extra Condensed', sans-serif;
   font-weight: 700;
-  text-uppercase: uppercase;
-  color: #0f172a;
+  text-transform: uppercase;
+  color: var(--text-title);
   letter-spacing: 0.5px;
   font-size: 1.4rem;
+  transition: color 0.3s ease;
 }
 
 /* Línea de tiempo (Timeline) limpia */
@@ -114,6 +213,7 @@ body {
   border-left: 2px solid var(--border-color);
   padding-left: 20px;
   margin-left: 10px;
+  transition: border-color 0.3s ease;
 }
 
 .timeline-item {
@@ -128,29 +228,56 @@ body {
   border-radius: 50%;
   left: -27px;
   top: 6px;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--bg-card);
+  transition: border-color 0.3s ease;
 }
 
 .stack-used {
   background-color: var(--bg-app);
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
   display: inline-block;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
 }
 
 /* Badges blandos */
-.bg-soft-primary { background-color: var(--primary-soft); }
-.bg-soft-success { background-color: var(--success-soft); }
-.bg-soft-secondary { background-color: var(--border-color); }
+.bg-soft-primary { 
+  background-color: var(--primary-soft);
+  color: var(--primary-color) !important;
+}
+
+.bg-soft-success { 
+  background-color: var(--success-soft);
+  color: var(--success-color) !important;
+}
+
+.bg-soft-secondary { 
+  background-color: var(--primary-soft);
+  color: var(--text-secondary) !important;
+  border: 1px solid var(--border-color);
+}
+
+/* Hover lift */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
+}
 
 /* Listas y extras */
 .border-bottom-dashed {
   border-bottom: 1px dashed var(--border-color);
+  transition: border-color 0.3s ease;
 }
+
 .cert-list li {
   margin-bottom: 8px;
   display: flex;
   align-items: center;
+  color: var(--text-secondary);
 }
 
 /* Toast Modernizado */
@@ -169,6 +296,7 @@ body {
   transform: translateY(100px);
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 .custom-toast.show {
@@ -176,36 +304,12 @@ body {
   opacity: 1;
 }
 
-/* 1. Ajuste para que las tarjetas respondan al tema */
-.profile-card, .content-card {
-  background-color: var(--bg-card, #ffffff); /* Usa variable, si no existe usa blanco */
+/* Modal overlay */
+.modal-overlay {
+  animation: fadeIn 0.2s ease;
 }
 
-.title-name, .section-title {
-  color: var(--text-title, #0f172a);
-}
-
-.tech-tag-sm {
-  background-color: var(--bg-card, #ffffff);
-}
-
-/* 2. LA MAGIA DEL MODO OSCURO */
-[data-theme='dark'] {
-  --bg-app: #0f172a;           /* Fondo general oscuro */
-  --bg-card: #1e293b;          /* Fondo de las tarjetas más claro que el fondo */
-  --text-main: #f8fafc;        /* Texto principal blanco/gris */
-  --text-muted: #94a3b8;       /* Texto secundario */
-  --text-title: #f1f5f9;       /* Títulos casi blancos */
-  --primary-soft: #334155;     /* Badges oscuros */
-  --border-color: #334155;     /* Bordes oscuros */
-}
-
-/* Ajustes finos para modo oscuro */
-[data-theme='dark'] .timeline-dot {
-  border-color: var(--bg-card);
-}
-
-[data-theme='dark'] .tech-tag-sm, 
-[data-theme='dark'] .tech-tag {
-  background-color: #0f172a;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
