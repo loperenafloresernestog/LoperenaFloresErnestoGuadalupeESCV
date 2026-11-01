@@ -227,29 +227,34 @@ const App = () => {
             <h3 className="section-title mb-4"><i className="fas fa-briefcase me-2 text-primary"></i> Experiencia Profesional</h3>
 
             <div className="timeline">
-              {/* Item 1 */}
+              {/* Item 1: Proyecto Independiente (Veterinaria & E-commerce) */}
               <div className="timeline-item mb-4">
                 <div className="timeline-dot"></div>
                 <div className="d-flex flex-column flex-md-row justify-content-between mb-2">
                   <div>
-                    <h4 className="h5 fw-bold mb-0">Sistema de Gestión para Clínica Veterinaria</h4>
-                    <span className="text-muted small fw-medium">Freelance</span>
+                    <h4 className="h5 fw-bold mb-0">Arquitecto y Desarrollador Backend</h4>
+                    <span className="text-muted small fw-medium">Proyecto Independiente — Plataforma de Gestión Clínica Veterinaria & E-commerce</span>
                   </div>
-                  <span className="badge bg-soft-success text-success align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">2026</span>
+                  <span className="badge bg-soft-success text-success align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">Nov 2025 – Actualidad</span>
                 </div>
 
-                <p className="text-secondary small mb-2">
-                  Diseño y desarrollo de una aplicación web para la gestión integral de una clínica veterinaria, enfocada en la administración de expedientes de mascotas, control de citas y flujos de usuarios. 
-                </p>
-                <p className="text-secondary small mb-2">
-                  El sistema asegura la protección de los datos mediante autenticación basada en roles y filtros sin estado (stateless). 
-                </p>
-                <p className="text-secondary small mb-2">
-                  La plataforma está construida bajo una arquitectura de microservicios, integrando el sistema principal de clínica con un módulo de tienda independiente; cada uno operando con bases de datos segregadas y comunicándose a través de la orquestación y consumo de APIs REST.
-                </p>
+                <ul className="text-secondary small ps-3 mb-3">
+                  <li className="mb-1">
+                    Arquitecturé una plataforma integral de gestión clínica veterinaria y e-commerce basada en microservicios utilizando <strong>Java y Spring Boot</strong>, comunicando dominios independientes a través de APIs REST.
+                  </li>
+                  <li className="mb-1">
+                    Implementé flujos de seguridad stateless mediante <strong>Spring Security, JWT y Google OAuth2</strong>, aplicando control de acceso basado en roles (RBAC) para proteger rutas sensibles.
+                  </li>
+                  <li className="mb-1">
+                    Diseñé la capa de persistencia de datos con <strong>Spring Data JPA y Hibernate</strong>, segregando esquemas relacionales (PostgreSQL/MySQL) para garantizar el aislamiento entre el módulo clínico y la tienda.
+                  </li>
+                  <li className="mb-1">
+                    Integré pasarelas de pago y arquitectura de cobro mediante enlaces (<strong>Pay-by-Link</strong>) para el módulo de facturación.
+                  </li>
+                </ul>
 
                 <div className="stack-used text-secondary small mb-3">
-                  <strong>Stack:</strong> Java, JPA / Hibernate, REST APIs, PostgreSQL, Spring Boot, Spring Security, JWT (Stateless Authentication), Google OAuth2, React.
+                  <strong>Stack:</strong> Java, Spring Boot, Microservicios, Spring Security, JWT, Google OAuth2, Spring Data JPA, Hibernate, PostgreSQL, MySQL, REST APIs, Pay-by-Link, React.
                 </div>
 
                 <div className="mt-2">
@@ -259,45 +264,59 @@ const App = () => {
                 </div>
               </div>
 
-              {/* Item 2 */}
+              {/* Item 2: INDAVA - Desarrollador Backend */}
               <div className="timeline-item mb-4">
                 <div className="timeline-dot"></div>
                 <div className="d-flex flex-column flex-md-row justify-content-between mb-2">
                   <div>
-                    <h4 className="h5 fw-bold mb-0">Servicio Social y Prácticas Profesionales</h4>
+                    <h4 className="h5 fw-bold mb-0">Desarrollador Backend</h4>
                     <span className="text-muted small fw-medium">INDAVA</span>
                   </div>
-                  <span className="badge bg-soft-secondary text-secondary align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">2025 - 2026</span>
+                  <span className="badge bg-soft-secondary text-secondary align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">Mar 2025 – Jun 2026</span>
                 </div>
-                <p className="text-secondary small mb-2">
-                  Desarrollo de herramientas automatizadas de backend y optimización de bases de datos orientadas a la extracción, limpieza y procesamiento masivo de información gubernamental y corporativa.
-                </p>
-                <p className="text-secondary small mb-2">
-                  Desarrollo de un sistema OCR con Python y Tesseract para extraer datos de salarios e incrementos de contratos legales para la plataforma Ohio Insightboard.                
-                </p>
-                <p className="text-secondary small mb-2">
-                  Optimicé y redacté consultas SQL complejas para la inserción y el análisis de datos en una plataforma Insightboard, mejorando significativamente la eficiencia del procesamiento de la información.
-                </p>
+
+                <ul className="text-secondary small ps-3 mb-3">
+                  <li className="mb-1">
+                    Mantenimiento y evolución de <strong>APIs RESTful</strong>, asegurando la integridad de reglas de negocio complejas y la alta disponibilidad de los servicios.
+                  </li>
+                  <li className="mb-1">
+                    Empaquetado y orquestación de aplicaciones mediante <strong>Docker</strong>, estandarizando los flujos de trabajo entre los entornos de desarrollo y producción.
+                  </li>
+                  <li className="mb-1">
+                    Resolución de incidencias técnicas y <strong>refactorización de código heredado en Java</strong>, mejorando significativamente la escalabilidad y mantenibilidad del sistema.
+                  </li>
+                </ul>
+
                 <div className="stack-used text-secondary small mb-3">
-                  <strong>Stack:</strong> Python (Bibliotecas de OCR y Web Scraping), Java, SQL, Optimización de Consultas.
+                  <strong>Stack:</strong> Java, APIs RESTful, Docker, Refactorización de Código, Arquitectura Backend, SQL.
                 </div>
               </div>
 
-              {/* Item 3 */}
+              {/* Item 3: INDAVA - Prácticas / Servicio Social */}
               <div className="timeline-item mb-2">
                 <div className="timeline-dot"></div>
                 <div className="d-flex flex-column flex-md-row justify-content-between mb-2">
                   <div>
-                    <h4 className="h5 fw-bold mb-0">Sistema de Control de Inventarios para Concesionaria</h4>
-                    <span className="text-muted small fw-medium">Freelance</span>
+                    <h4 className="h5 fw-bold mb-0">Desarrollador Backend (Prácticas / Servicio Social)</h4>
+                    <span className="text-muted small fw-medium">INDAVA</span>
                   </div>
-                  <span className="badge bg-soft-secondary text-secondary align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">2025</span>
+                  <span className="badge bg-soft-secondary text-secondary align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">Jun 2024 – Feb 2025</span>
                 </div>
-                <p className="text-secondary small mb-2">
-                  Software de escritorio enfocado en la administración, trazabilidad y control de inventario de vehículos para agencias automotrices, automatizando los flujos de almacén tradicionales.
-                </p>
+
+                <ul className="text-secondary small ps-3 mb-3">
+                  <li className="mb-1">
+                    Desarrollé un sistema OCR utilizando <strong>Python, OpenCV y Tesseract</strong> para la extracción de datos salariales en contratos legales para la plataforma Ohio Insightboard, incrementando la velocidad en un <strong>45%</strong> con <strong>92% de precisión</strong>.
+                  </li>
+                  <li className="mb-1">
+                    Diseñé un pipeline de <strong>web scraping</strong> para automatizar la recolección de datos de portales del gobierno mexicano para una biblioteca digital (Tramitoteca), reduciendo el ingreso manual en un <strong>57.4%</strong>.
+                  </li>
+                  <li className="mb-1">
+                    Optimizé consultas SQL complejas para el análisis e inserción de datos masivos, reduciendo los tiempos de carga de la plataforma <strong>Insightboard Ohio</strong>.
+                  </li>
+                </ul>
+
                 <div className="stack-used text-secondary small mb-3">
-                  <strong>Stack:</strong> Java SE, Apache Maven, JPA (Java Persistence API), MySQL.
+                  <strong>Stack:</strong> Python, OpenCV, Tesseract OCR, Web Scraping, SQL (Optimización y Procesamiento Masivo).
                 </div>
               </div>
             </div>
