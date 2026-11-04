@@ -16,6 +16,7 @@ const projectImages = {
     `${BASE_URL}assets/img/DetalleCitas.png`,
     `${BASE_URL}assets/img/RegistroMascotas.png`,
     `${BASE_URL}assets/img/RegistroClientes.png`,
+    `${BASE_URL}assets/img/RegistroEmpleados.png`,
     `${BASE_URL}assets/img/RegistroCitas.png`,
     `${BASE_URL}assets/img/RegistroDeReportes.png`
   ],
