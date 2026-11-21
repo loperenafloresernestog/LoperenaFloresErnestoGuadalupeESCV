@@ -139,7 +139,7 @@ const App = () => {
               <h1 className="h3 fw-bold mb-1 title-name">Ernesto Guadalupe</h1>
               <h2 className="h4 fw-bold text-gradient mb-3">Loperena Flores</h2>
               <div className="badge bg-soft-primary text-primary mb-3 px-3 py-2 rounded-pill fw-semibold">
-                Desarrollador Backend
+                Desarrollador Full Stack.
               </div>
             </div>
 
