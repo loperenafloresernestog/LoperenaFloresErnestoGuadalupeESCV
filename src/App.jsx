@@ -228,7 +228,20 @@ const App = () => {
             <h3 className="section-title mb-4"><i className="fas fa-briefcase me-2 text-primary"></i> Experiencia Profesional</h3>
 
             <div className="timeline">
-              {/* Item 1: Proyecto Independiente (Veterinaria & E-commerce) */}
+            {/* Item 1: Desarrollador Full Stack Jr. */}
+              <div className="timeline-item mb-4">
+                <div className="timeline-dot"></div>
+                <div className="d-flex flex-column flex-md-row justify-content-between mb-2">
+                  <div>
+                    <h4 className="h5 fw-bold mb-0">Desarrollador Full Stack Jr.</h4>
+                    <span className="text-muted small fw-medium">Grupo Siayec</span>
+                  </div>
+                  <span className="badge bg-soft-success text-success align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">Nov 2025 – Actualidad</span>
+                </div>
+
+              </div>
+
+              {/* Item 2: Proyecto Independiente (Veterinaria & E-commerce) */}
               <div className="timeline-item mb-4">
                 <div className="timeline-dot"></div>
                 <div className="d-flex flex-column flex-md-row justify-content-between mb-2">
@@ -236,7 +249,7 @@ const App = () => {
                     <h4 className="h5 fw-bold mb-0">Desarrollador Backend</h4>
                     <span className="text-muted small fw-medium">Proyecto Independiente — Plataforma de Gestión Clínica Veterinaria & E-commerce</span>
                   </div>
-                  <span className="badge bg-soft-success text-success align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">Nov 2025 – Actualidad</span>
+                  <span className="badge bg-soft-success text-success align-self-start mt-1 mt-md-0 px-2.5 py-1 rounded">Nov 2025 – nov 2026</span>
                 </div>
 
                 <ul className="text-secondary small ps-3 mb-3">
@@ -265,7 +278,7 @@ const App = () => {
                 </div>
               </div>
 
-              {/* Item 2: INDAVA - Desarrollador Backend */}
+              {/* Item 3: INDAVA - Desarrollador Backend */}
               <div className="timeline-item mb-4">
                 <div className="timeline-dot"></div>
                 <div className="d-flex flex-column flex-md-row justify-content-between mb-2">
@@ -293,7 +306,7 @@ const App = () => {
                 </div>
               </div>
 
-              {/* Item 3: INDAVA - Prácticas / Servicio Social */}
+              {/* Item 4: INDAVA - Prácticas / Servicio Social */}
               <div className="timeline-item mb-2">
                 <div className="timeline-dot"></div>
                 <div className="d-flex flex-column flex-md-row justify-content-between mb-2">
